@@ -27,8 +27,10 @@ function sendSubscriptionToServer(subscription) {
     fetch('http://localhost:8080/push/web/register', {
         method: 'post',
         headers: {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'x-requested-with': 'kewl'
         },
+        credentials: 'include',
         body: JSON.stringify({
             endpoint: endpointWorkaround(subscription)
         })
