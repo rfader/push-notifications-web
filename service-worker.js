@@ -14,7 +14,7 @@ self.addEventListener('push', function(event) {
     console.log('event:', event);
 
     var title = 'Cuest';
-    var body = payload || 'We have received a push message.';
+    var body = payload;
     var icon = '/images/icon-192x192.png';
 
     event.waitUntil(

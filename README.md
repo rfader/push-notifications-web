@@ -8,12 +8,15 @@ router.route('/push/web/register')
     setTimeout(() => {
         webPush.sendNotification({
             endpoint: req.body.endpoint,
-            TTL: 1
-        })
+            keys: {
+                p256dh: req.body.key,
+                auth: req.body.authSecret
+            }
+        }, 'payload')
         .catch((error) => {
             console.log(error);
         });
-    }, 5000);
+    }, 2000);
     res.status(201).end();
 });
 

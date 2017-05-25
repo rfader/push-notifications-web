@@ -35,7 +35,7 @@ function sendSubscriptionToServer(subscription) {
         method: 'post',
         headers: {
             'content-type': 'application/json',
-            'x-requested-with': 'kewl'
+            'x-requested-with': 'test'
         },
         credentials: 'include',
         body: JSON.stringify({
