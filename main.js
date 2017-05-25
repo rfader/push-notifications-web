@@ -24,6 +24,13 @@ function endpointWorkaround(pushSubscription) {
 }
 
 function sendSubscriptionToServer(subscription) {
+    console.log('sendSubscriptionToServer');
+
+    var rawKey = subscription.getKey ? subscription.getKey('p256dh') : '';
+    var key = rawKey ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : '';
+    var rawAuthSecret = subscription.getKey ? subscription.getKey('auth') : '';
+    var authSecret = rawAuthSecret ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret))) : '';
+
     fetch('http://localhost:8080/push/web/register', {
         method: 'post',
         headers: {
@@ -32,7 +39,9 @@ function sendSubscriptionToServer(subscription) {
         },
         credentials: 'include',
         body: JSON.stringify({
-            endpoint: endpointWorkaround(subscription)
+            endpoint: endpointWorkaround(subscription),
+            key: key,
+            authSecret: authSecret
         })
     });
 }
@@ -174,6 +183,8 @@ function initialiseState() {
 window.addEventListener('load', function() {
     var pushButton = document.querySelector('.js-push-button');
     pushButton.addEventListener('click', function() {
+        console.log('click');
+
         if (isPushEnabled) {
             unsubscribe();
         } else {

@@ -1,16 +1,26 @@
 'use strict';
 
+self.addEventListener('install', function(event) {
+    event.waitUntil(self.skipWaiting());
+});
+
+self.addEventListener('activate', function(event) {
+    event.waitUntil(self.clients.claim());
+});
+
 self.addEventListener('push', function(event) {
-    var title = 'Yay a message.';
-    var body = 'We have received a push message.';
+    var payload = event.data ? event.data.text() : 'no payload';
+
+    console.log('event:', event);
+
+    var title = 'Cuest';
+    var body = payload || 'We have received a push message.';
     var icon = '/images/icon-192x192.png';
-    var tag = 'simple-push-demo-notification-tag';
 
     event.waitUntil(
         self.registration.showNotification(title, {
             body: body,
-            icon: icon,
-            tag: tag
+            icon: icon
         })
     );
 });
@@ -20,19 +30,14 @@ self.addEventListener('notificationclick', function(event) {
     // See: http://crbug.com/463146
     event.notification.close();
 
-    // This looks to see if the current is already open and
-    // focuses if it is
-    event.waitUntil(clients.matchAll({
-        type: 'window'
-    }).then(function(clientList) {
-        for (var i = 0; i < clientList.length; i++) {
-            var client = clientList[i];
-            if (client.url === '/' && 'focus' in client) {
-                return client.focus();
+    event.waitUntil(
+        self.clients.matchAll()
+        .then(function(clientList) {
+            if (clientList.length > 0) {
+                return clientList[0].focus();
             }
-        }
-        if (clients.openWindow) {
-            return clients.openWindow('/');
-        }
-    }));
+
+            return self.clients.openWindow('/');
+        })
+    );
 });
