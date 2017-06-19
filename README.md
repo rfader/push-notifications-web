@@ -1,5 +1,6 @@
 ## Server Code:
 
+```
 webPush.setGCMAPIKey('SERVER API KEY');
 
 router.route('/push/web/register')
@@ -19,4 +20,4 @@ router.route('/push/web/register')
     }, 2000);
     res.status(201).end();
 });
-
+```
